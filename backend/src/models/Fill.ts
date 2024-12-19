@@ -6,17 +6,15 @@ export class Fill {
   @PrimaryGeneratedColumn("uuid")
   id!: string;
 
-  @Column()
-  @ManyToOne(() => Field)
-  @JoinColumn({ name: "fieldId" }) 
-  fieldId!: string; 
+  @Column({ name: "field_id" })
+  fieldId!: string;
 
   @Column("text")
   value!: string | number | boolean | Date;
 
-  @Column()
+  @Column({ name: "is_required", default: false })
   isRequired!: boolean;
   
-  @CreateDateColumn()
+  @CreateDateColumn({ name: "created_at" })
   createdAt!: Date;
 }

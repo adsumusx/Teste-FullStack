@@ -5,15 +5,15 @@ export class Field {
   @PrimaryGeneratedColumn('uuid')
   id!: string; 
 
-  @Column()
+  @Column("text")
   name!: string;
 
-  @Column()
+  @Column("text")
   datatype!: string;
 
-  @Column()
+  @Column({ name: "is_required", default: false })
   isRequired!: boolean;
-
-  @CreateDateColumn()
+ 
+  @CreateDateColumn({ name: "created_at" })
   createdAt!: Date;
 }

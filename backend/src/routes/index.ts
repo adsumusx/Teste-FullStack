@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { createField, getFields } from "../controllers/FieldController";
-import { createFill, getFills } from "../controllers/FillController";
+import { createField, deleteField, getFields, updateField } from "../controllers/FieldController";
+import { createFill, deleteFill, getFills, updateFill } from "../controllers/FillController";
 
 const router = Router();
 /**
@@ -157,5 +157,123 @@ router.post("/fills", createFill);
  *                 $ref: '#/components/schemas/Fill'
  */
 router.get("/fills", getFills);
+
+/**
+ * @swagger
+ * /fields/{id}:
+ *   put:
+ *     summary: Atualiza um campo existente.
+ *     tags:
+ *       - Fields
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: ID do campo a ser atualizado
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Field'
+ *     responses:
+ *       200:
+ *         description: Campo atualizado com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Field'
+ *       400:
+ *         description: Erro de validação ou campo com nome duplicado.
+ *       404:
+ *         description: Campo não encontrado.
+ */
+router.put("/fields/:id", updateField);
+
+
+/**
+ * @swagger
+ * /fields/{id}:
+ *   delete:
+ *     summary: Remove um campo existente.
+ *     tags:
+ *       - Fields
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: ID do campo a ser removido
+ *     responses:
+ *       204:
+ *         description: Campo removido com sucesso.
+ *       404:
+ *         description: Campo não encontrado.
+ */
+router.delete("/fields/:id", deleteField);
+
+/**
+ * @swagger
+ * /fills/{id}:
+ *   put:
+ *     summary: Atualiza um preenchimento existente.
+ *     tags:
+ *       - Fills
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: ID do preenchimento a ser atualizado
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Fill'
+ *     responses:
+ *       200:
+ *         description: preenchimento atualizado com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Fill'
+ *       400:
+ *         description: Erro de validação ou preenchimento com campo duplicado.
+ *       404:
+ *         description: Preenchimento não encontrado.
+ */
+router.put("/fills/:id", updateFill);
+
+
+/**
+ * @swagger
+ * /fills/{id}:
+ *   delete:
+ *     summary: Remove um preenchimento existente.
+ *     tags:
+ *       - Fills
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: ID do preenchimento a ser removido
+ *     responses:
+ *       204:
+ *         description: Preenchimento removido com sucesso.
+ *       404:
+ *         description: Preenchimento não encontrado.
+ */
+router.delete("/fills/:id", deleteFill);
 
 export default router;
