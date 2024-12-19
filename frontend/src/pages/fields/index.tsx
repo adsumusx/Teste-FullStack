@@ -21,10 +21,11 @@ const FieldsPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  //Função para buscar os Campos no endpoint do backend
   const fetchFields = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:3000/fields");
+      const response = await axios.get("http://localhost:3001/fields");
       setFields(response.data);
       setLoading(false);
     } catch (error) {
@@ -40,6 +41,7 @@ const FieldsPage = () => {
     }
   };
 
+  //Função para validar o formulário
   const validateForm = () => {
     if (form.name.trim().length < 2) {
       setError("Nome do campo deve ter pelo menos 2 caracteres.");
@@ -48,6 +50,7 @@ const FieldsPage = () => {
     return true;
   };
 
+  //Função para enviar o formulário para o backend e salvar o novo Campo
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -56,7 +59,7 @@ const FieldsPage = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post("http://localhost:3000/fields", form);
+      const response = await axios.post("http://localhost:3001/fields", form);
       
       setFields(prevFields => [response.data, ...prevFields]);
       
@@ -80,6 +83,7 @@ const FieldsPage = () => {
     fetchFields();
   }, []);
 
+  //Função para redirecionar para página de preenchimentos
   const handleNavigateToFills = () => {
     navigate('/fills');
   };
@@ -101,7 +105,6 @@ const FieldsPage = () => {
         </button>
       </div>
       
-      {/* Error Notification */}
       {error && (
         <div 
           className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" 
@@ -184,7 +187,6 @@ const FieldsPage = () => {
         </button>
       </form>
 
-      {/* Tabela de campos */}
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-4 text-gray-700">
           Campos Criados {loading && '(Carregando...)'}

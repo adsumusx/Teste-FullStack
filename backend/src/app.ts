@@ -11,12 +11,13 @@ app.use(express.json());
 
 app.use(router);
 
+//Inicializa o banco de dados
 AppDataSource.initialize()
   .then(() => {
-    console.log("Database connected!");
+    console.log("Banco de dados Conectado!");
   })
   .catch((err) => {
-    console.error("DB connection error:", err);
+    console.error("Erro na conexão com o Banco de dados:", err);
     process.exit(1);
   });
 

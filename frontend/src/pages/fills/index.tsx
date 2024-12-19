@@ -26,7 +26,11 @@ const FillsPage: React.FC = () => {
   const navigate = useNavigate();
   const [fields, setFields] = useState<Field[]>([]);
   const [fills, setFills] = useState<Fill[]>([]);
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<{
+    fieldId: string;
+    value: string | number | boolean | Date | "";
+    isRequired: boolean;
+  }>({
     fieldId: "",
     value: "",
     isRequired: false,
@@ -35,10 +39,11 @@ const FillsPage: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [selectedField, setSelectedField] = useState<Field | null>(null);
 
+  //Função para buscar os Campos no endpoint do backend para listar no dropdown de campos
   const fetchFields = async () => {
     try {
       setLoading(true);
-      const response = await axios.get<Field[]>("http://localhost:3000/fields");
+      const response = await axios.get<Field[]>("http://localhost:3001/fields");
       setFields(response.data);
     } catch (error) {
       const apiError = error as { response?: { data: ApiError } };
@@ -49,10 +54,11 @@ const FillsPage: React.FC = () => {
     }
   };
 
+  //Função para buscar os Preenchimentos no endpoint do backend
   const fetchFills = async () => {
     try {
       setLoading(true);
-      const response = await axios.get<Fill[]>("http://localhost:3000/fills");
+      const response = await axios.get<Fill[]>("http://localhost:3001/fills");
       setFills(response.data);
     } catch (error) {
       const apiError = error as { response?: { data: ApiError } };
@@ -65,21 +71,23 @@ const FillsPage: React.FC = () => {
     }
   };
 
+  //Função para alterar o Campo selecionado no dropdown
   const handleFieldSelection = (fieldId: string) => {
     const field = fields.find((f) => f.id === fieldId);
     setSelectedField(field || null);
     setForm((prev) => ({ ...prev, fieldId, value: "" }));
   };
 
+  //Função para renderizar de forma dinamica o Input baseado no tipo requerido no Campo 
   const renderValueInput = () => {
     if (!selectedField) return null;
-
+  
     switch (selectedField.datatype) {
       case "string":
         return (
           <input
             type="text"
-            value={form.value}
+            value={form.value as string} // Garantimos que o tipo seja string
             onChange={(e) => setForm({ ...form, value: e.target.value })}
             placeholder="Digite o texto"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
@@ -90,8 +98,10 @@ const FillsPage: React.FC = () => {
         return (
           <input
             type="number"
-            value={form.value}
-            onChange={(e) => setForm({ ...form, value: e.target.value })}
+            value={form.value !== "" ? form.value.toString() : ""} // Convertemos o valor para string
+            onChange={(e) =>
+              setForm({ ...form, value: e.target.value ? Number(e.target.value) : "" })
+            }
             placeholder="Digite um número"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             required
@@ -100,8 +110,10 @@ const FillsPage: React.FC = () => {
       case "boolean":
         return (
           <select
-            value={form.value}
-            onChange={(e) => setForm({ ...form, value: e.target.value })}
+            value={form.value.toString()} // Convertemos para string
+            onChange={(e) =>
+              setForm({ ...form, value: e.target.value === "true" })
+            }
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             required
           >
@@ -116,7 +128,7 @@ const FillsPage: React.FC = () => {
         return (
           <input
             type="date"
-            value={form.value}
+            value={form.value !== "" ? form.value.toString() : ""} // Convertemos para string
             onChange={(e) => setForm({ ...form, value: e.target.value })}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
             required
@@ -127,13 +139,14 @@ const FillsPage: React.FC = () => {
     }
   };
 
+ //Função para enviar o formulário para o backend e salvar o novo Preenchimento
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      const response = await axios.post<Fill>("http://localhost:3000/fills", {
+      const response = await axios.post<Fill>("http://localhost:3001/fills", {
         fieldId: form.fieldId,
         value: form.value,
         isRequired: form.isRequired,
@@ -155,7 +168,6 @@ const FillsPage: React.FC = () => {
         (apiError as { response?: { data: ApiError } }).response?.data.error ||
         (error as Error).message ||
         "Erro ao criar preenchimento";
-
       setError(errorMessage);
       console.error("Erro ao criar preenchimento:", error);
     } finally {
@@ -168,6 +180,7 @@ const FillsPage: React.FC = () => {
     fetchFills();
   }, []);
 
+  //Função para redirecionar para a página de Campos
   const handleNavigateToFields = () => {
     navigate("/");
   };

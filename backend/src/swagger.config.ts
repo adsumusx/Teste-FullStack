@@ -1,5 +1,6 @@
 import { Options } from "swagger-jsdoc";
 
+//Configurações do Swagger
 const swaggerOptions: Options = {
   definition: {
     openapi: "3.0.0",
@@ -10,7 +11,7 @@ const swaggerOptions: Options = {
     },
     servers: [
       {
-        url: "http://localhost:3000",
+        url: "http://localhost:3001",
         description: "Servidor local",
       },
     ],
