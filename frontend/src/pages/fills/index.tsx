@@ -43,7 +43,7 @@ const FillsPage: React.FC = () => {
   const fetchFields = async () => {
     try {
       setLoading(true);
-      const response = await axios.get<Field[]>("http://localhost:3000/fields");
+      const response = await axios.get<Field[]>("http://localhost:3001/fields");
       setFields(response.data);
     } catch (error) {
       const apiError = error as { response?: { data: ApiError } };
@@ -58,7 +58,7 @@ const FillsPage: React.FC = () => {
   const fetchFills = async () => {
     try {
       setLoading(true);
-      const response = await axios.get<Fill[]>("http://localhost:3000/fills");
+      const response = await axios.get<Fill[]>("http://localhost:3001/fills");
       setFills(response.data);
     } catch (error) {
       const apiError = error as { response?: { data: ApiError } };
@@ -146,7 +146,7 @@ const FillsPage: React.FC = () => {
     setError(null);
 
     try {
-      const response = await axios.post<Fill>("http://localhost:3000/fills", {
+      const response = await axios.post<Fill>("http://localhost:3001/fills", {
         fieldId: form.fieldId,
         value: form.value,
         isRequired: form.isRequired,

@@ -25,7 +25,7 @@ const FieldsPage = () => {
   const fetchFields = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:3000/fields");
+      const response = await axios.get("http://localhost:3001/fields");
       setFields(response.data);
       setLoading(false);
     } catch (error) {
@@ -59,7 +59,7 @@ const FieldsPage = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post("http://localhost:3000/fields", form);
+      const response = await axios.post("http://localhost:3001/fields", form);
       
       setFields(prevFields => [response.data, ...prevFields]);
       
