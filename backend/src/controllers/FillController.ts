@@ -21,6 +21,7 @@ const fillSchema = z.object({
   message: "Validação de preenchimento falhou"
 });
 
+//Função para criar um novo preenchimento
 export const createFill = async (req: Request, res: Response) => {
   try {
 
@@ -36,6 +37,7 @@ export const createFill = async (req: Request, res: Response) => {
 
     let parsedValue: string | number | boolean | Date = body.value;
     let valueForQuery: string;
+    //Verificar o tipo do valor do campo e se foi preenchido corretamente
     switch (field.datatype) {
       case "number":
         if (isNaN(Number(body.value))) {
@@ -81,7 +83,7 @@ export const createFill = async (req: Request, res: Response) => {
         valueForQuery = parsedValue;
         break;
     }
-
+    //Verificar se já existe um Preenchimento com o campo e valor igual
     const exists = await fillRepo.findOneBy({
       fieldId: body.fieldId,
       value: valueForQuery, 
@@ -101,6 +103,7 @@ export const createFill = async (req: Request, res: Response) => {
   }
 };
 
+//Função para buscar todos os preenchimentos
 export const getFills = async (_req: Request, res: Response) => {
   const fills = await AppDataSource.getRepository(Fill).find();
   return res.json(fills);

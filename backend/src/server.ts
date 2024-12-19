@@ -4,6 +4,8 @@ import swaggerJsdoc from "swagger-jsdoc";
 import swaggerOptions from "./swagger.config"; 
 
 const PORT = 3000;
+
+//Inicializa a Documentação do Swagger
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 

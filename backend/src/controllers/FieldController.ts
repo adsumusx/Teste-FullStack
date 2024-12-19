@@ -12,6 +12,7 @@ const fieldSchema = z.object({
   createdAt: z.date().optional().default(() => new Date())
 });
 
+//Função para criar um novo Campo
 export const createField = async (req: Request, res: Response) => {
   try {
     const body = fieldSchema.parse({
@@ -21,6 +22,7 @@ export const createField = async (req: Request, res: Response) => {
 
     const fieldRepo = AppDataSource.getRepository(Field);
     
+    //Verificar se já existe Campo com mesmo nome 
     const existingField = await fieldRepo.findOneBy({ name: body.name });
     if (existingField) {
       return res.status(400).json({ 
@@ -53,6 +55,7 @@ export const createField = async (req: Request, res: Response) => {
   }
 };
 
+//Função para buscar todos os Campos
 export const getFields = async (_req: Request, res: Response) => {
   try {
     const fieldRepo = AppDataSource.getRepository(Field);
